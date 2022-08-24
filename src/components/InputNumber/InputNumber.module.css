@@ -1,0 +1,28 @@
+.counterWrapp {
+  display: flex;
+}
+
+.count {
+  width: 35px;
+  text-align: center;
+  line-height: 21px;
+  background-color: white;
+}
+
+.btnCounter {
+  width: 30px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.inputName {
+  text-align: center;
+  font-weight: bold;
+}

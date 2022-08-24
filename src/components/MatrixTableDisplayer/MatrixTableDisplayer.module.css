@@ -1,0 +1,46 @@
+table {
+  margin-bottom: 20px;
+}
+
+tbody {
+  text-align: center;
+  position: relative;
+}
+
+tr {
+  position: relative;
+}
+.deleteBtnWrapp {
+  position: relative;
+}
+
+.deleteBtn {
+  position: absolute;
+  cursor: pointer;
+  border: none;
+  left: -20px;
+}
+
+.sumTd {
+  background-color: rgb(187, 187, 187);
+  min-width: 65px;
+  cursor: pointer;
+}
+
+.trMid {
+  position: absolute;
+  left: 0px
+}
+
+.tdMid {
+  background-color: rgb(160, 160, 160);
+  border: 1px solid black;
+}
+
+.tdCell {
+  position: relative;
+  height: 20px;
+  width: 10px;
+  cursor: pointer;
+  border: 1px solid black;
+}
