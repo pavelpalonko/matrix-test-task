@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/matrix-test-task/static/css/main.adc6ffa1.css",
+    "main.js": "/matrix-test-task/static/js/main.803c5850.js",
+    "index.html": "/matrix-test-task/index.html",
+    "main.adc6ffa1.css.map": "/matrix-test-task/static/css/main.adc6ffa1.css.map",
+    "main.803c5850.js.map": "/matrix-test-task/static/js/main.803c5850.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.adc6ffa1.css",
+    "static/js/main.803c5850.js"
+  ]
+}
