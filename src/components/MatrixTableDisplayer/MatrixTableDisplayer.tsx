@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface MatrixTableDisplayProps {
   matrix: Matrix
+  closestCells: MatrixRow
   onMouseOutEvent: MouseEventHandler<HTMLElement>
   deleteRow: MouseEventHandler<HTMLElement>
   onMouseOverEvent: MouseEventHandler<HTMLElement>
@@ -13,12 +14,19 @@ interface MatrixTableDisplayProps {
   matrixColumnMid: number[]
 }
 
-const MatrixTableDisplayer = ({ matrix, onMouseOutEvent, deleteRow, onMouseOverEvent, onClickEvent, rowSum, matrixColumnMid }: MatrixTableDisplayProps) => {
+const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow, onMouseOverEvent, onClickEvent, rowSum, matrixColumnMid }: MatrixTableDisplayProps) => {
 
   const [indexRow, setIndexRow] = useState<any>()
 
   const showPercente = (index: number) => {
     setIndexRow(index)
+  }
+
+  const isClosestCells = (currentId: number) => {
+    if(closestCells.length === 0) return false
+    for (let cell of closestCells) {
+      if(cell.id === currentId) return true
+    }
   }
 
   return (
@@ -30,7 +38,7 @@ const MatrixTableDisplayer = ({ matrix, onMouseOutEvent, deleteRow, onMouseOverE
                 <td onClick={deleteRow} data-index={index} className={style.deleteBtn}>✖</td>
                 {rowMarix.map((cell: MatrixCell) =>
                 
-                  <td key={cell.id} data-id={cell.id} className={style.tdCell}>
+                  <td key={cell.id} data-id={cell.id} className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
                     
                     {<div key={uuidv4()} style={
                       {

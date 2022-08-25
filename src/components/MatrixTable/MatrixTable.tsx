@@ -17,9 +17,9 @@ const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps ) => {
   const { cellsAmount } = useMatrixVisualEffects()
   const { buildMatrix, calculateMatrix } = useMatrixCalculations()
 
-
   const [matrixSum, setMatrixSum] = useState<MatrixDerivedProperties>({ rowSumValues: [], columnAverageValues: [] })
   const [matrix, setMatrix] = useState<Matrix>([])
+  const [closestCells, setClosestCells] = useState<MatrixRow>([])
 
   const startBuildMatrix = () => {
     uniqueId(true)
@@ -55,7 +55,7 @@ const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps ) => {
 
   const onHighlightCells = (event: React.MouseEvent<HTMLElement>) => {
     if ((event.target as HTMLElement).dataset.id) {
-      cellsAmount(event, matrix, matrixSize.X)
+      setClosestCells([...cellsAmount(event, matrix, matrixSize.X)])
     }
   }
 
@@ -69,6 +69,7 @@ const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps ) => {
         <MyButton inner={'START BUILD MATRIX'} onClick={startBuildMatrix} />
         <MatrixTableDisplayer
           matrix={matrix}
+          closestCells={closestCells}
           rowSum={matrixSum.rowSumValues}
           matrixColumnMid={matrixSum.columnAverageValues}
           deleteRow={deleteRow}

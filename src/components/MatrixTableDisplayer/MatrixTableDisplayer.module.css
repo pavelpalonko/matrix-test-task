@@ -44,3 +44,12 @@ tr {
   cursor: pointer;
   border: 1px solid black;
 }
+
+.tdCellBackLight {
+  position: relative;
+  height: 20px;
+  width: 10px;
+  cursor: pointer;
+  border: 1px solid black;
+  background-color: rgb(150, 150, 150);
+}

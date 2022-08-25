@@ -8,6 +8,10 @@ export function useMatrixVisualEffects() {
     const cellsArray: { id: number, amount: number }[] = []
     let currentCell: any
 
+    if (event.type === 'mouseout') {
+      return []
+    }
+
     for (let rowMatrix of matrix) {
       for (let cellMatrix of rowMatrix) {
         if (+(event.target as HTMLElement).dataset.id! === +cellMatrix.id) {
@@ -28,16 +32,8 @@ export function useMatrixVisualEffects() {
 
     }
 
-    for (let cell of closeAmount) {
-      const selector = `[data-id='${cell.id}']`
-      document.querySelector(`${selector}`)?.classList.add('backlight')
-    }
-
-    if (event.type === 'mouseout') {
-      for (let cell of Array.from(document.querySelectorAll(`.backlight`))) {
-        cell.classList.remove('backlight')
-      }
-    }
+    return closeAmount
+ 
   }
 
   return {
