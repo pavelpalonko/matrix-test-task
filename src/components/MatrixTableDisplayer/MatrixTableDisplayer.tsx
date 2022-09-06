@@ -39,7 +39,6 @@ const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow
                 {rowMarix.map((cell: MatrixCell) =>
                 
                   <td key={cell.id} data-id={cell.id} className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
-                    
                     {<div key={uuidv4()} style={
                       {
                         backgroundColor: "red",
