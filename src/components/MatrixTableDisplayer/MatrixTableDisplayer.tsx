@@ -6,16 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 interface MatrixTableDisplayProps {
   matrix: Matrix
   closestCells: MatrixRow
-  onMouseOutEvent: Function
+  removeHighlightsCells: Function
   deleteRow: Function
-  onMouseOverEvent: Function
-  onClickEvent: Function
+  highlightCells: Function
+  incrementsAmount: Function
   rowSum: number[]
   matrixColumnMid: number[]
 }
 
-const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow, onMouseOverEvent, onClickEvent, rowSum, matrixColumnMid }: MatrixTableDisplayProps) => {
+const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, deleteRow, highlightCells, incrementsAmount, rowSum, matrixColumnMid }: MatrixTableDisplayProps) => {
 
+  console.log(matrixColumnMid)
   const [indexRow, setIndexRow] = useState<any>()
 
   const showPercente = (index: number) => {
@@ -38,9 +39,9 @@ const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow
                 <td onClick={() =>deleteRow(index)} id={index} className={style.deleteBtn}>✖</td>
                 {rowMarix.map((cell: MatrixCell) => 
                   <td 
-                  onClick={() => onClickEvent(cell.id)}
-                  onMouseOver={() => onMouseOverEvent(cell.id)} 
-                  onMouseOut={() => onMouseOutEvent()} 
+                  onClick={() => incrementsAmount(cell.id)}
+                  onMouseOver={() => highlightCells(cell.id)} 
+                  onMouseOut={() => removeHighlightsCells()} 
                   key={cell.id} 
                   data-id={cell.id} 
                   className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
@@ -75,7 +76,7 @@ const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow
         }
         <tr className={style.trMid}>
           {
-            matrixColumnMid.length
+            matrixColumnMid[0] !== 0
               ? matrixColumnMid.map((elem: number) =>
                 <td key={uuidv4()} className={style.tdMid}>
                   {elem}

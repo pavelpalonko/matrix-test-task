@@ -65,9 +65,9 @@ const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps) => {
         rowSum={matrixSum.rowSumValues}
         matrixColumnMid={matrixSum.columnAverageValues}
         deleteRow={deleteRow}
-        onMouseOutEvent={onHighlightCells}
-        onMouseOverEvent={onHighlightCells}
-        onClickEvent={incrementsAmount} />
+        removeHighlightsCells={onHighlightCells}
+        highlightCells={onHighlightCells}
+        incrementsAmount={incrementsAmount} />
       {
         matrix.length
           ? <MyButton inner={'ADD ROW'} onClick={addRow} />
