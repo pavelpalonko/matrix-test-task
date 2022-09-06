@@ -5,18 +5,21 @@ interface InputNumberProps {
   value: number
   increment: any
   decrement: any
+  matrixSize: any
+  setMatrixSize: any
 }
 
-const InputNumber = ({ title, value, increment, decrement }: InputNumberProps) => {
-
+const InputNumber = ({ title, value, increment, decrement, matrixSize, setMatrixSize }: InputNumberProps) => {
   return (
     <div>
       <div className={style.inputName}>{title}</div>
       <div className={style.counterWrapp}>
         <button className={style.btnCounter} type="button" onClick={decrement}>-</button>
-        <div className={style.count}>
-          {value}
-        </div>
+        <input type="text"
+          className={style.count}
+          value={matrixSize[title]}
+          onChange={(e) => setMatrixSize({ ...matrixSize, [title]: e.target.value })}
+        />
         <button className={style.btnCounter} type="button" onClick={increment}>+</button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from 'react'
+import { useState } from 'react'
 import style from './MatrixTableDisplayer.module.css'
 import { Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 import { v4 as uuidv4 } from 'uuid';
@@ -6,10 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 interface MatrixTableDisplayProps {
   matrix: Matrix
   closestCells: MatrixRow
-  onMouseOutEvent: MouseEventHandler<HTMLElement>
-  deleteRow: MouseEventHandler<HTMLElement>
-  onMouseOverEvent: MouseEventHandler<HTMLElement>
-  onClickEvent: MouseEventHandler<HTMLElement>
+  onMouseOutEvent: Function
+  deleteRow: Function
+  onMouseOverEvent: Function
+  onClickEvent: Function
   rowSum: number[]
   matrixColumnMid: number[]
 }
@@ -31,14 +31,19 @@ const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow
 
   return (
     <table>
-      <tbody onClick={onClickEvent} onMouseOver={onMouseOverEvent} onMouseOut={onMouseOutEvent}>
+      <tbody>
         {
-          matrix.map((rowMarix: MatrixRow, index: number) => (
+          matrix.map((rowMarix: MatrixRow, index: any) => (
               <tr key={index}>
-                <td onClick={deleteRow} data-index={index} className={style.deleteBtn}>✖</td>
-                {rowMarix.map((cell: MatrixCell) =>
-                
-                  <td key={cell.id} data-id={cell.id} className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
+                <td onClick={() =>deleteRow(index)} id={index} className={style.deleteBtn}>✖</td>
+                {rowMarix.map((cell: MatrixCell) => 
+                  <td 
+                  onClick={() => onClickEvent(cell.id)}
+                  onMouseOver={() => onMouseOverEvent(cell.id)} 
+                  onMouseOut={() => onMouseOutEvent()} 
+                  key={cell.id} 
+                  data-id={cell.id} 
+                  className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
                     {<div key={uuidv4()} style={
                       {
                         backgroundColor: "red",

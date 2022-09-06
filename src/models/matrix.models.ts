@@ -6,6 +6,7 @@ export interface MatrixCell {
 export type MatrixRow = MatrixCell[]
 export type Matrix = MatrixRow[]
 
+
 export interface MatrixDerivedProperties {
   rowSumValues: number[],
   columnAverageValues: number[]

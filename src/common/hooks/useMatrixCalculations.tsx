@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import { Matrix, MatrixDerivedProperties } from "../../models/matrix.models"
 
 export function useMatrixCalculations() {
@@ -16,23 +17,24 @@ export function useMatrixCalculations() {
     return matrix
   }
 
-  const calculateMatrix = (rowMatrix: number, colMatrix: number, matrix: Matrix,) => {
+  const calculateMatrix = useCallback( (rowMatrix: number, colMatrix: number, matrix: Matrix,) => {
     const matrixSum: MatrixDerivedProperties = { rowSumValues: [], columnAverageValues: [] }
 
-    for (let row of matrix) {
+    matrix.forEach(row => {
       matrixSum.rowSumValues.push(row.reduce((sum: number, current: {amount: number}) => sum + current.amount, 0))
-    }
+    })
 
-    for (let colIndex = 0; colIndex < colMatrix; colIndex++) {
-      let sum = 0
-      for (let col of matrix) {
-        sum += col[colIndex]?.amount
-      }
-      matrixSum.columnAverageValues.push(Math.round(sum / rowMatrix))
-    }
+ 
+    matrixSum.columnAverageValues = matrix.reduce((sum, row) => {
+      row.forEach((elem, index) => {
+        sum[index].average += elem.amount
+      })
+      return sum
+    }, Array.from({length: colMatrix}, () => ({average: 0}))).map((el) => Math.round(el.average / rowMatrix))
 
+ 
     return matrixSum
-  }
+  }, [])
 
   return {
     buildMatrix,

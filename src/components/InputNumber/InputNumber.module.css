@@ -4,9 +4,11 @@
 
 .count {
   width: 35px;
+  height: 18px;
   text-align: center;
   line-height: 21px;
   background-color: white;
+  border: none;
 }
 
 .btnCounter {

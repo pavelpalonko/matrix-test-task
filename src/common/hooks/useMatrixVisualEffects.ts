@@ -3,18 +3,18 @@ import { Matrix } from "../../models/matrix.models"
 
 export function useMatrixVisualEffects() {
 
-  const cellsAmount = (event: React.MouseEvent<HTMLElement>, matrix: Matrix, x: number) => {
+  const cellsAmount = (elementId: number, matrix: Matrix, x: number) => {
     const closeAmount: { id: number, amount: number }[] = []
     const cellsArray: { id: number, amount: number }[] = []
     let currentCell: any
 
-    if (event.type === 'mouseout') {
+    if (elementId === undefined) {
       return []
     }
 
     for (let rowMatrix of matrix) {
       for (let cellMatrix of rowMatrix) {
-        if (+(event.target as HTMLElement).dataset.id! === +cellMatrix.id) {
+        if (elementId === cellMatrix.id) {
           currentCell = cellMatrix
           continue
         } 
