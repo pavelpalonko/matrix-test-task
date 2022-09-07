@@ -16,7 +16,6 @@ interface MatrixTableDisplayProps {
 
 const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, deleteRow, highlightCells, incrementsAmount, rowSum, matrixColumnMid }: MatrixTableDisplayProps) => {
 
-  console.log(matrixColumnMid)
   const [indexRow, setIndexRow] = useState<any>()
 
   const showPercente = (index: number) => {

@@ -6,10 +6,10 @@ interface InputNumberProps {
   increment: any
   decrement: any
   matrixSize: any
-  setMatrixSize: any
+  onChangeValue: Function
 }
 
-const InputNumber = ({ title, value, increment, decrement, matrixSize, setMatrixSize }: InputNumberProps) => {
+const InputNumber = ({ title, increment, decrement, matrixSize, onChangeValue }: InputNumberProps) => {
   return (
     <div>
       <div className={style.inputName}>{title}</div>
@@ -18,7 +18,7 @@ const InputNumber = ({ title, value, increment, decrement, matrixSize, setMatrix
         <input type="text"
           className={style.count}
           value={matrixSize[title]}
-          onChange={(e) => setMatrixSize({ ...matrixSize, [title]: e.target.value })}
+          onChange={(e) => onChangeValue(e.target.value, title)}
         />
         <button className={style.btnCounter} type="button" onClick={increment}>+</button>
       </div>

@@ -8,6 +8,12 @@ const MainPage = () => {
 
   const [matrixSize, setMatrixSize] = useState<InitialParameters>({ M: 0, N: 0, X: 0 })
 
+  const onChangeValue = (value: any, title: string) => {
+    const newValue = value.replace(/[^0-9]/g,'')
+    if (newValue > 100) return
+    setMatrixSize({...matrixSize, [title]: newValue})
+  }
+
   const incrementInitialParameters = (fieldName: string) => {
     if (fieldName === 'X' && matrixSize.X === (matrixSize.M * matrixSize.N)) return
     if (fieldName === 'M' && matrixSize[fieldName] >= 100) return
@@ -31,7 +37,7 @@ const MainPage = () => {
           increment={() => incrementInitialParameters('M')}
           decrement={() => decrementInitialParameters('M')}
           matrixSize={matrixSize}
-          setMatrixSize={setMatrixSize}
+          onChangeValue={onChangeValue }
         />
 
         <InputNumber
@@ -40,7 +46,7 @@ const MainPage = () => {
           increment={() => incrementInitialParameters('N')}
           decrement={() => decrementInitialParameters('N')}
           matrixSize={matrixSize}
-          setMatrixSize={setMatrixSize}
+          onChangeValue={onChangeValue }
         />
 
         <InputNumber
@@ -49,7 +55,7 @@ const MainPage = () => {
           increment={() => incrementInitialParameters('X')}
           decrement={() => decrementInitialParameters('X')}
           matrixSize={matrixSize}
-          setMatrixSize={setMatrixSize}
+          onChangeValue={onChangeValue }
         />
 
       </div>
