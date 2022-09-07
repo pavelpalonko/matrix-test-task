@@ -8,10 +8,10 @@ const MainPage = () => {
 
   const [matrixSize, setMatrixSize] = useState<InitialParameters>({ M: 0, N: 0, X: 0 })
 
-  const onChangeValue = (value: any, title: string) => {
+  const onChangeValue = (value: string, title: string) => {
     const newValue = value.replace(/[^0-9]/g,'')
-    if (newValue > 100) return
-    setMatrixSize({...matrixSize, [title]: newValue})
+    if (+newValue > 100) return
+    setMatrixSize({...matrixSize, [title]: +newValue})
   }
 
   const incrementInitialParameters = (fieldName: string) => {

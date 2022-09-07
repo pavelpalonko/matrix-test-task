@@ -1,11 +1,13 @@
+import { MouseEventHandler } from "react"
+import { InitialParameters } from "../../models/matrix.models"
 import style from "./InputNumber.module.css"
 
 interface InputNumberProps {
   title: string
   value: number
-  increment: any
-  decrement: any
-  matrixSize: any
+  increment: MouseEventHandler<HTMLButtonElement>
+  decrement: MouseEventHandler<HTMLButtonElement>
+  matrixSize: InitialParameters
   onChangeValue: Function
 }
 

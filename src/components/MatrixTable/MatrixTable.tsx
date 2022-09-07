@@ -20,6 +20,7 @@ const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps) => {
   const [matrix, setMatrix] = useState<Matrix>([])
   const [closestCells, setClosestCells] = useState<MatrixRow>([])
 
+  
   const matrixSum = useMemo(() => calculateMatrix(matrixSize.M, matrixSize.N, matrix), [matrixSize.M, matrixSize.N, matrix, calculateMatrix])
 
   const startBuildMatrix = () => {
@@ -52,8 +53,8 @@ const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps) => {
     })
   }
 
-  const onHighlightCells = (elementId: number) => {
-    setClosestCells([...cellsAmount(elementId, matrix, matrixSize.X)])
+  const onHighlightCells = (currentCell: MatrixCell) => {
+    setClosestCells([...cellsAmount(currentCell, matrix, matrixSize.X)])
   }
 
   return (

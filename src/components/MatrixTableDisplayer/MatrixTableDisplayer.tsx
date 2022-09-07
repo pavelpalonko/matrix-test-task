@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import style from './MatrixTableDisplayer.module.css'
 import { Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
-import { v4 as uuidv4 } from 'uuid';
 
 interface MatrixTableDisplayProps {
   matrix: Matrix
@@ -39,12 +38,12 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
                 {rowMarix.map((cell: MatrixCell) => 
                   <td 
                   onClick={() => incrementsAmount(cell.id)}
-                  onMouseOver={() => highlightCells(cell.id)} 
+                  onMouseOver={() => highlightCells(cell)} 
                   onMouseOut={() => removeHighlightsCells()} 
                   key={cell.id} 
                   data-id={cell.id} 
                   className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
-                    {<div key={uuidv4()} style={
+                    {<div key={`divByIndex${index}`} style={
                       {
                         backgroundColor: "red",
                         opacity: '0.3',
@@ -60,7 +59,7 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
                 {
                   rowSum
                     ? <><td
-                      key={uuidv4()}
+                      key={`rowByIndex${index}`}
                       data-control={true}
                       className={style.sumTd}
                       onMouseOver={() => showPercente(index)}
@@ -76,8 +75,8 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
         <tr className={style.trMid}>
           {
             matrixColumnMid[0] !== 0
-              ? matrixColumnMid.map((elem: number) =>
-                <td key={uuidv4()} className={style.tdMid}>
+              ? matrixColumnMid.map((elem: number, index) =>
+                <td key={`midByIndex${index}`} className={style.tdMid}>
                   {elem}
                 </td>)
               : null
