@@ -1,32 +1,16 @@
-import { useCallback } from "react"
+import { useMemo } from "react"
 import { Matrix, MatrixDerivedProperties } from "../../models/matrix.models"
+import { randomInteger } from "../utils/randomNumberGenerator"
+import { uniqueId } from "../utils/uniqueId"
 
-export function useMatrixCalculations() {
+export function useMatrixCalculations(matrix: Matrix) {
 
-  const buildMatrix = (
-    rowMatrix: number,
-    colMatrix: number,
-    randomInt: (min: number, max: number) => number,
-    generetorId: (reset: boolean) => number) => {
-
-    return Array.from({ length: rowMatrix },
-      (_, k) => (Array.from({ length: colMatrix },
-        () => ({ id: generetorId(false), amount: randomInt(100, 999), rowId: k }))))
+  const createMatrix = (rowMatrix: number, colMatrix: number, id: number = 0) => {
+    return Array.from({ length: rowMatrix }, (_, k) => (Array.from({ length: colMatrix },
+      () => ({ id: uniqueId(false), amount: randomInteger(100, 999), rowId: id > 0 ? id : k }))))
   }
 
-  const addRowMatrix = (
-    matrix: any,
-    colMatrix: number,
-    randomInt: (min: number, max: number) => number,
-    generetorId: (reset: boolean) => number) => {
-
-    const incRowId = matrix[matrix.length - 1][0].rowId + 1
-
-    return Array.from({ length: 1 }, () => (Array.from({ length: colMatrix },
-      () => ({ id: generetorId(false), amount: randomInt(100, 999), rowId: incRowId }))))
-  }
-
-  const calculateMatrix = useCallback((matrix: Matrix) => {
+  const matrixSum = useMemo(() => {
     const matrixSum: MatrixDerivedProperties = { rowSumValues: [], columnAverageValues: [] }
 
     matrixSum.rowSumValues = matrix.reduce((sum, row, index) => {
@@ -41,11 +25,10 @@ export function useMatrixCalculations() {
     }, Array.from({ length: matrix[0]?.length }, (_, k) => ({ average: 0, averageId: k })))
 
     return matrixSum
-  }, [])
+  }, [matrix])
 
   return {
-    buildMatrix,
-    addRowMatrix,
-    calculateMatrix
+    createMatrix,
+    matrixSum
   }
 }

@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useCallback } from "react"
+import React, { useState, useCallback } from "react"
 import MatrixTableDisplayer from "../MatrixTableDisplayer/MatrixTableDisplayer"
 import { useMatrixCalculations } from "../../common/hooks/useMatrixCalculations"
 import { useMatrixVisualEffects } from "../../common/hooks/useMatrixVisualEffects"
 import { uniqueId } from "../../common/utils/uniqueId"
-import { randomInteger } from "../../common/utils/randomNumberGenerator"
 import MyButton from "../MyButton/MyButton"
 import { ClosestCells, CurrentCells, InitialParameters, Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 
@@ -14,22 +13,20 @@ interface MatrixTableProps {
 
 const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
 
-  const { cellsAmount } = useMatrixVisualEffects()
-  const { buildMatrix, addRowMatrix, calculateMatrix } = useMatrixCalculations()
-
   const [matrix, setMatrix] = useState<Matrix>([])
   const [closestCells, setClosestCells] = useState<ClosestCells>([])
 
-  const matrixSum = useMemo(() => calculateMatrix(matrix), [matrix, calculateMatrix])
+  const { cellsAmount } = useMatrixVisualEffects()
+  const { createMatrix, matrixSum } = useMatrixCalculations(matrix)
 
   const startBuildMatrix = () => {
     uniqueId(true)
-    setMatrix(buildMatrix(matrixSize.M, matrixSize.N, randomInteger, uniqueId))
+    setMatrix(createMatrix(matrixSize.M, matrixSize.N))
   }
 
   const addRow = () => {
     if (matrixSize.M < matrixSize.N) return
-    setMatrix([...matrix, ...addRowMatrix(matrix, matrixSize.N, randomInteger, uniqueId)])
+    setMatrix([...matrix, ...createMatrix(1, matrixSize.N, matrix[matrix.length - 1][0].rowId + 1)])
     resizeMatrix(matrixSize.M + 1)
   }
 
