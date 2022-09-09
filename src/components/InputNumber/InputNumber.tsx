@@ -8,7 +8,7 @@ interface InputNumberProps {
   increment: MouseEventHandler<HTMLButtonElement>
   decrement: MouseEventHandler<HTMLButtonElement>
   matrixSize: InitialParameters
-  onChangeValue: Function
+  onChangeValue: (value: string, title: string) => void
 }
 
 const InputNumber = ({ title, increment, decrement, matrixSize, onChangeValue }: InputNumberProps) => {

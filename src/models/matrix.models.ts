@@ -1,15 +1,37 @@
+export interface CurrentCells {
+  id: number
+  amount: number
+}
+
+export type ClosestCells = CurrentCells[]
+
 export interface MatrixCell {
   id: number
   amount: number
+  rowId: number
 }
 
 export type MatrixRow = MatrixCell[]
 export type Matrix = MatrixRow[]
 
+export interface RowSum {
+  rowSum: number
+  sumId: number
+}
+
+export interface CellAverage {
+  average: number
+  averageId: number
+}
 
 export interface MatrixDerivedProperties {
-  rowSumValues: number[],
-  columnAverageValues: number[]
+  rowSumValues: RowSum[],
+  columnAverageValues: CellAverage[]
+}
+
+export interface CurrentSumCell {
+  sumId: number
+  index: number
 }
 
 export interface InitialParameters {

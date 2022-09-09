@@ -1,11 +1,12 @@
-import { Matrix, MatrixCell } from "../../models/matrix.models"
+import { CurrentCells, Matrix } from "../../models/matrix.models"
+
 
 export function useMatrixVisualEffects() {
 
-  const cellsAmount = (currentCell: MatrixCell, matrix: Matrix, x: number) => {
-    const closeAmount: { id: number, amount: number }[] = []
+  const cellsAmount = (currentCell: CurrentCells, matrix: Matrix, x: number) => {
+    const closeAmount: CurrentCells[] = []
 
-    if (currentCell === undefined) return []
+    if (!currentCell) return []
     
     const flatCellsArr = matrix.map((row) => row.filter((cell) => currentCell.id !== cell.id)).flat()
 
@@ -16,9 +17,7 @@ export function useMatrixVisualEffects() {
       const currentIndex = flatCellsArr.findIndex((element) => element.id === closest.id)
       closeAmount.push(...flatCellsArr.splice(currentIndex, 1))
     }
-
     return closeAmount
- 
   }
 
   return {
