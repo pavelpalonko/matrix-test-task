@@ -1,12 +1,12 @@
-import { CurrentCells, Matrix } from "../../models/matrix.models"
+import { useMemo } from "react"
+import { Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 
+export function useMatrixVisualEffects(currentCell: MatrixCell, matrix: Matrix, x: number) {
 
-export function useMatrixVisualEffects() {
+  const cellsAmount = useMemo( () => {
+    const closeAmount: MatrixRow = []
 
-  const cellsAmount = (currentCell: CurrentCells, matrix: Matrix, x: number) => {
-    const closeAmount: CurrentCells[] = []
-
-    if (!currentCell) return []
+    if (currentCell.amount === 0) return []
     
     const flatCellsArr = matrix.map((row) => row.filter((cell) => currentCell.id !== cell.id)).flat()
 
@@ -17,8 +17,9 @@ export function useMatrixVisualEffects() {
       const currentIndex = flatCellsArr.findIndex((element) => element.id === closest.id)
       closeAmount.push(...flatCellsArr.splice(currentIndex, 1))
     }
+
     return closeAmount
-  }
+  }, [currentCell, matrix, x])
 
   return {
     cellsAmount

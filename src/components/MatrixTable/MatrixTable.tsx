@@ -4,7 +4,7 @@ import { useMatrixCalculations } from "../../common/hooks/useMatrixCalculations"
 import { useMatrixVisualEffects } from "../../common/hooks/useMatrixVisualEffects"
 import { uniqueId } from "../../common/utils/uniqueId"
 import MyButton from "../MyButton/MyButton"
-import { ClosestCells, CurrentCells, InitialParameters, Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
+import { InitialParameters, Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 
 interface MatrixTableProps {
   matrixSize: InitialParameters
@@ -14,9 +14,9 @@ interface MatrixTableProps {
 const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
 
   const [matrix, setMatrix] = useState<Matrix>([])
-  const [closestCells, setClosestCells] = useState<ClosestCells>([])
+  const [currentCell, setCurrentCell] = useState<MatrixCell>({amount: 0, id: 0, rowId: 0})
 
-  const { cellsAmount } = useMatrixVisualEffects()
+  const { cellsAmount } = useMatrixVisualEffects(currentCell, matrix, matrixSize.X)
   const { createMatrix, matrixSum } = useMatrixCalculations(matrix)
 
   const startBuildMatrix = () => {
@@ -36,7 +36,7 @@ const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
     resizeMatrix(matrixSize.M - 1)
   }
 
-  const incrementsAmount = (elementId: MatrixCell['id']) => {
+  const incrementsAmount = useCallback( (elementId: MatrixCell['id']) => {
     setMatrix((prevState: Matrix) => {
       return prevState.map((rowMatrix: MatrixRow) => {
         return rowMatrix.map((element: MatrixCell) => {
@@ -47,26 +47,26 @@ const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
         })
       })
     })
-  }
+  }, [])
 
   const onHighlightCells = useCallback(
-    (currentCell: CurrentCells) => {
-      setClosestCells([...cellsAmount(currentCell, matrix, matrixSize.X)])
-    }, [cellsAmount, matrix, matrixSize.X]
+    (currentCell: MatrixCell) => {
+      setCurrentCell(currentCell)
+    }, [setCurrentCell]
   )
 
-  const removeHighlightCells = useCallback(() => setClosestCells([]), [setClosestCells])
+  const removeHighlightCells = useCallback(() => setCurrentCell({amount: 0, id: 0, rowId: 0}), [setCurrentCell])
 
   return (
     <>
       <MyButton inner={'START BUILD MATRIX'} onClickHandler={startBuildMatrix} />
       <MatrixTableDisplayer
         matrix={matrix}
-        closestCells={closestCells}
+        closestCells={cellsAmount}
         rowSum={matrixSum.rowSumValues}
         columnAverage={matrixSum.columnAverageValues}
         deleteRow={deleteRow}
-        highlightCells={onHighlightCells}
+        onHighlightCells={onHighlightCells}
         removeHighlightsCells={removeHighlightCells}
         incrementsAmount={incrementsAmount} />
       {

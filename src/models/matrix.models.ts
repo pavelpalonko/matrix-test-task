@@ -1,10 +1,3 @@
-export interface CurrentCells {
-  id: number
-  amount: number
-}
-
-export type ClosestCells = CurrentCells[]
-
 export interface MatrixCell {
   id: number
   amount: number
