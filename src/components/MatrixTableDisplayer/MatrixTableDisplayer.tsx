@@ -1,86 +1,90 @@
-import { MouseEventHandler, useState } from 'react'
+import { useState } from 'react'
 import style from './MatrixTableDisplayer.module.css'
-import { Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
-import { v4 as uuidv4 } from 'uuid';
+import { CellAverage, CurrentSumCell, Matrix, MatrixCell, MatrixRow, RowSum } from "../../models/matrix.models"
+import Cell from '../Cell/Cell'
 
 interface MatrixTableDisplayProps {
   matrix: Matrix
   closestCells: MatrixRow
-  onMouseOutEvent: MouseEventHandler<HTMLElement>
-  deleteRow: MouseEventHandler<HTMLElement>
-  onMouseOverEvent: MouseEventHandler<HTMLElement>
-  onClickEvent: MouseEventHandler<HTMLElement>
-  rowSum: number[]
-  matrixColumnMid: number[]
+  removeHighlightsCells: () => void
+  deleteRow: (rowIndex: number) => void
+  onHighlightCells: (currentCell: MatrixCell) => void
+  incrementsAmount: (elemntId: MatrixCell['id']) => void
+  rowSum: RowSum[]
+  columnAverage: CellAverage[]
 }
 
-const MatrixTableDisplayer = ({ matrix, closestCells, onMouseOutEvent, deleteRow, onMouseOverEvent, onClickEvent, rowSum, matrixColumnMid }: MatrixTableDisplayProps) => {
+const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, deleteRow, onHighlightCells, incrementsAmount, rowSum, columnAverage }: MatrixTableDisplayProps) => {
 
-  const [indexRow, setIndexRow] = useState<any>()
+  const flatMatrix = matrix.flat()
+  const [currentSumCell, setCurrentSumCell] = useState<CurrentSumCell>({ sumId: -1, index: -1 })
 
-  const showPercente = (index: number) => {
-    setIndexRow(index)
+  const showPercente = (currentCell: CurrentSumCell) => {
+    setCurrentSumCell(currentCell)
   }
 
-  const isClosestCells = (currentId: number) => {
-    if(closestCells.length === 0) return false
-    for (let cell of closestCells) {
-      if(cell.id === currentId) return true
-    }
+  const isClosestCells = (currentId: number): boolean => {
+    if (closestCells.length === 0) return false
+    return Boolean(closestCells.find((el) => el.id === currentId)) 
+  }
+
+  const calcPercent = (cell: MatrixCell) => {
+    return currentSumCell.sumId === cell.rowId
+      ? `${Math.round((cell.amount / rowSum[currentSumCell.index].rowSum) * 100)}%`
+      : '0'
   }
 
   return (
-    <table>
-      <tbody onClick={onClickEvent} onMouseOver={onMouseOverEvent} onMouseOut={onMouseOutEvent}>
+    <div>
+
+      <div className={style.container}>
+        <div>
+          {
+            matrix.map((row, index: number) => (
+              <div key={`delete_id${row[0].rowId}`} onClick={() => deleteRow(index)} className={style.deleteBtn}>✖</div>
+            ))
+          }
+        </div>
+
+        <div className={style.cellWrapp} style={{ gridTemplateColumns: `repeat(${columnAverage?.length}, 1fr)` }}>
+          {
+            flatMatrix.map((cell: MatrixCell) => (
+              <Cell
+                key={`cell_Id${cell.id}`}
+                cell={cell}
+                incAmount={incrementsAmount}
+                highlightCells={onHighlightCells}
+                removeHighlightCells={removeHighlightsCells}
+                isHighLight={isClosestCells(cell.id)}
+                percent={calcPercent(cell)}
+              />
+            ))
+          }
+        </div>
+
+        <div>
+          {
+            rowSum.map((sum, index) => (
+              <div
+                key={`rowSum_id${sum.sumId}`}
+                onMouseOver={() => showPercente({ sumId: sum.sumId, index: index })}
+                onMouseOut={() => setCurrentSumCell({ sumId: -1, index: -1 })}
+                className={style.sum}>{sum.rowSum}</div>
+            ))
+          }
+        </div>
+
+      </div>
+
+      <div className={style.averageWrapp}>
         {
-          matrix.map((rowMarix: MatrixRow, index: number) => (
-              <tr key={index}>
-                <td onClick={deleteRow} data-index={index} className={style.deleteBtn}>✖</td>
-                {rowMarix.map((cell: MatrixCell) =>
-                
-                  <td key={cell.id} data-id={cell.id} className={isClosestCells(cell.id) ? style.tdCellBackLight : style.tdCell}>
-                    
-                    {<div key={uuidv4()} style={
-                      {
-                        backgroundColor: "red",
-                        opacity: '0.3',
-                        height: `100%`,
-                        width: indexRow === index ? `${Math.round((cell.amount / rowSum[index]) * 100)}%` : '0',
-                        position: 'absolute',
-                        top: '0',
-                        left: '0'
-                      }}></div >}
-                    {indexRow === index ? `${Math.round((cell.amount / rowSum[index]) * 100)}%` : cell.amount}
-                  </td>)
-                }
-                {
-                  rowSum
-                    ? <><td
-                      key={uuidv4()}
-                      data-control={true}
-                      className={style.sumTd}
-                      onMouseOver={() => showPercente(index)}
-                      onMouseOut={() => setIndexRow('')}
-                    >
-                      {rowSum[index]}
-                    </td></>
-                    : null
-                }
-              </tr>
+          columnAverage?.map((elem) => (
+            <div key={`average_id${elem.averageId}`} className={style.average}>{elem.average}</div>
           ))
         }
-        <tr className={style.trMid}>
-          {
-            matrixColumnMid.length
-              ? matrixColumnMid.map((elem: number) =>
-                <td key={uuidv4()} className={style.tdMid}>
-                  {elem}
-                </td>)
-              : null
-          }
-        </tr>
-      </tbody>
-    </table>
+      </div>
+
+    </div>
   )
 }
 

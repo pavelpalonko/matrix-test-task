@@ -1,43 +1,27 @@
-import { Matrix } from "../../models/matrix.models"
+import { useMemo } from "react"
+import { Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 
+export function useMatrixVisualEffects(currentCell: MatrixCell, matrix: Matrix, x: number) {
 
-export function useMatrixVisualEffects() {
+  const cellsAmount = useMemo( () => {
+    const closeAmount: MatrixRow = []
 
-  const cellsAmount = (event: React.MouseEvent<HTMLElement>, matrix: Matrix, x: number) => {
-    const closeAmount: { id: number, amount: number }[] = []
-    const cellsArray: { id: number, amount: number }[] = []
-    let currentCell: any
+    if (currentCell.amount === 0) return []
+    
+    const flatCellsArr = matrix.map((row) => row.filter((cell) => currentCell.id !== cell.id)).flat()
 
-    if (event.type === 'mouseout') {
-      return []
-    }
-
-    for (let rowMatrix of matrix) {
-      for (let cellMatrix of rowMatrix) {
-        if (+(event.target as HTMLElement).dataset.id! === +cellMatrix.id) {
-          currentCell = cellMatrix
-          continue
-        } 
-        cellsArray.push(cellMatrix)
-      }
-    }
-
-    cellsArray.sort((a: { amount: number }, b: { amount: number }) => a.amount - b.amount)
+    flatCellsArr.sort((a: { amount: number }, b: { amount: number }) => a.amount - b.amount)
 
     for (let i = 0; i < x; i++) {
-   
-      const closest = cellsArray.reduce((a,b) => Math.abs(b.amount-currentCell.amount) < Math.abs(a.amount-currentCell.amount) ? b : a);
-      const currentIndex = cellsArray.findIndex((element) => element.id === closest.id)
-      closeAmount.push(...cellsArray.splice(currentIndex, 1))
-
+      const closest = flatCellsArr.reduce((a,b) => Math.abs(b.amount-currentCell.amount) < Math.abs(a.amount-currentCell.amount) ? b : a);
+      const currentIndex = flatCellsArr.findIndex((element) => element.id === closest.id)
+      closeAmount.push(...flatCellsArr.splice(currentIndex, 1))
     }
 
     return closeAmount
- 
-  }
+  }, [currentCell, matrix, x])
 
   return {
     cellsAmount
   }
-
 }

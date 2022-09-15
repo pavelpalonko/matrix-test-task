@@ -1,86 +1,79 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useCallback } from "react"
 import MatrixTableDisplayer from "../MatrixTableDisplayer/MatrixTableDisplayer"
 import { useMatrixCalculations } from "../../common/hooks/useMatrixCalculations"
-import { useMatrixVisualEffects} from "../../common/hooks/useMatrixVisualEffects"
+import { useMatrixVisualEffects } from "../../common/hooks/useMatrixVisualEffects"
 import { uniqueId } from "../../common/utils/uniqueId"
-import { randomInteger } from "../../common/utils/randomNumberGenerator"
 import MyButton from "../MyButton/MyButton"
-import { InitialParameters, Matrix, MatrixCell, MatrixRow, MatrixDerivedProperties } from "../../models/matrix.models"
+import { InitialParameters, Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 
 interface MatrixTableProps {
   matrixSize: InitialParameters
-  setMatrixSize: Function
+  resizeMatrix: (newValue: number) => void
 }
 
-const MatrixTable = ({ matrixSize, setMatrixSize }: MatrixTableProps ) => {
+const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
 
-  const { cellsAmount } = useMatrixVisualEffects()
-  const { buildMatrix, calculateMatrix } = useMatrixCalculations()
-
-  const [matrixSum, setMatrixSum] = useState<MatrixDerivedProperties>({ rowSumValues: [], columnAverageValues: [] })
   const [matrix, setMatrix] = useState<Matrix>([])
-  const [closestCells, setClosestCells] = useState<MatrixRow>([])
+  const [currentCell, setCurrentCell] = useState<MatrixCell>({amount: 0, id: 0, rowId: 0})
+
+  const { cellsAmount } = useMatrixVisualEffects(currentCell, matrix, matrixSize.X)
+  const { createMatrix, matrixSum } = useMatrixCalculations(matrix)
 
   const startBuildMatrix = () => {
     uniqueId(true)
-    setMatrix([...buildMatrix(matrixSize.M, matrixSize.N, randomInteger, uniqueId)])
+    setMatrix(createMatrix(matrixSize.M, matrixSize.N))
   }
 
   const addRow = () => {
     if (matrixSize.M < matrixSize.N) return
-    setMatrix([...matrix, ...buildMatrix(1, matrixSize.N, randomInteger, uniqueId)])
-    setMatrixSize({ ...matrixSize, M: matrixSize.M + 1 })
+    setMatrix([...matrix, ...createMatrix(1, matrixSize.N, matrix[matrix.length - 1][0].rowId + 1)])
+    resizeMatrix(matrixSize.M + 1)
   }
 
-  const deleteRow = (event: React.MouseEvent<HTMLElement>) => {
-    const clearArrMatrix = matrix.filter(( _ , index: number) => index !== +(event.target as HTMLElement).dataset.index!)
-    setMatrix([...clearArrMatrix])
-    setMatrixSize({ ...matrixSize, M: matrixSize.M - 1 })
+  const deleteRow = (rowIndex: number) => {
+    const clearArrMatrix = matrix.filter((_, index: number) => index !== rowIndex)
+    setMatrix(clearArrMatrix)
+    resizeMatrix(matrixSize.M - 1)
   }
 
-  const incrementsAmount = (event: React.MouseEvent<HTMLElement>) => {
-    if ((event.target as HTMLElement).dataset.control) return
-
+  const incrementsAmount = useCallback( (elementId: MatrixCell['id']) => {
     setMatrix((prevState: Matrix) => {
       return prevState.map((rowMatrix: MatrixRow) => {
         return rowMatrix.map((element: MatrixCell) => {
-          if (element.id === +(event.target as HTMLElement).dataset.id!) {
+          if (element.id === elementId) {
             return { ...element, amount: ++element.amount }
           }
           return element
         })
       })
     })
-  }
+  }, [])
 
-  const onHighlightCells = (event: React.MouseEvent<HTMLElement>) => {
-    if ((event.target as HTMLElement).dataset.id) {
-      setClosestCells([...cellsAmount(event, matrix, matrixSize.X)])
-    }
-  }
+  const onHighlightCells = useCallback(
+    (currentCell: MatrixCell) => {
+      setCurrentCell(currentCell)
+    }, [setCurrentCell]
+  )
 
-  useEffect(() => {
-    setMatrixSum(calculateMatrix(matrixSize.M, matrixSize.N, matrix))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matrix])
+  const removeHighlightCells = useCallback(() => setCurrentCell({amount: 0, id: 0, rowId: 0}), [setCurrentCell])
 
   return (
     <>
-        <MyButton inner={'START BUILD MATRIX'} onClick={startBuildMatrix} />
-        <MatrixTableDisplayer
-          matrix={matrix}
-          closestCells={closestCells}
-          rowSum={matrixSum.rowSumValues}
-          matrixColumnMid={matrixSum.columnAverageValues}
-          deleteRow={deleteRow}
-          onMouseOutEvent={onHighlightCells}
-          onMouseOverEvent={onHighlightCells}
-          onClickEvent={incrementsAmount} />
-        {
-          matrix.length
-            ? <MyButton inner={'ADD ROW'} onClick={addRow} />
-            : null
-        }
+      <MyButton inner={'START BUILD MATRIX'} onClickHandler={startBuildMatrix} />
+      <MatrixTableDisplayer
+        matrix={matrix}
+        closestCells={cellsAmount}
+        rowSum={matrixSum.rowSumValues}
+        columnAverage={matrixSum.columnAverageValues}
+        deleteRow={deleteRow}
+        onHighlightCells={onHighlightCells}
+        removeHighlightsCells={removeHighlightCells}
+        incrementsAmount={incrementsAmount} />
+      {
+        matrix.length
+          ? <MyButton inner={'ADD ROW'} onClickHandler={addRow} />
+          : null
+      }
     </>
   )
 }

@@ -1,8 +1,13 @@
 import style from "./MyButton.module.css"
 
-const MyButton = ({inner, onClick}: any) => {
+interface MyButtonProps {
+  inner: string
+  onClickHandler: () => void
+}
+
+const MyButton = ({inner, onClickHandler}: MyButtonProps) => {
   return (
-    <button className={style.myBtn} onClick={onClick}>
+    <button className={style.myBtn} onClick={onClickHandler}>
       {inner}
     </button>
   )
