@@ -5,7 +5,7 @@ interface MyButtonProps {
   onClickHandler: () => void
 }
 
-const MyButton = ({inner, onClickHandler}: MyButtonProps) => {
+const MyButton = ({ inner, onClickHandler }: MyButtonProps) => {
   return (
     <button className={style.myBtn} onClick={onClickHandler}>
       {inner}
