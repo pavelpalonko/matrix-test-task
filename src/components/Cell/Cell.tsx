@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-import style from './Cell.module.css'
 import { MatrixCell } from '../../models/matrix.models'
 
 interface CellProps {
@@ -7,7 +6,7 @@ interface CellProps {
   incAmount: (elemntId: MatrixCell['id']) => void
   highlightCells: (currentCell: MatrixCell) => void
   removeHighlightCells: () => void
-  isHighLight: boolean
+  isHighLight: string
   percent: string
 }
 
@@ -15,20 +14,13 @@ const Cell = memo(({ cell, incAmount, highlightCells, removeHighlightCells, isHi
 
   return (
     <div
-      className={isHighLight ? style.cellBackLight : style.cell}
+      className={isHighLight}
       onClick={() => incAmount(cell.id)}
       onMouseOver={() => highlightCells(cell)}
       onMouseOut={() => removeHighlightCells()}>
-      {
-        <div 
-        className={style.percent}
-        style={{width: percent}}
-        >
-        </div>
-      }
-      {percent === '0' ? cell.amount : percent}
+      {percent === '0' ? cell.amount :  percent }
     </div>
   )
 })
 
-export default Cell 
+export default Cell

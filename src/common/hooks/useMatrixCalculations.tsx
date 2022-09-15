@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useMemo } from 'react'
 import { Matrix, MatrixDerivedProperties } from "../../models/matrix.models"
 import { randomInteger } from "../utils/randomNumberGenerator"
 import { uniqueId } from "../utils/uniqueId"

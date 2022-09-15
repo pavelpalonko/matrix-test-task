@@ -3,9 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 1170px;
+  width: fit-content;
+  height: fit-content;
   margin: 0 auto; 
   font-family: 'Courier New', Courier, monospace; 
+  text-align: center;
 }
 
 .matrixWrapp {

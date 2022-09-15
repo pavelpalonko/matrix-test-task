@@ -25,7 +25,7 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
 
   const isClosestCells = (currentId: number): boolean => {
     if (closestCells.length === 0) return false
-    return Boolean(closestCells.find((el) => el.id === currentId)) 
+    return Boolean(closestCells.find((el) => el.id === currentId))
   }
 
   const calcPercent = (cell: MatrixCell) => {
@@ -48,17 +48,21 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
 
         <div className={style.cellWrapp} style={{ gridTemplateColumns: `repeat(${columnAverage?.length}, 1fr)` }}>
           {
-            flatMatrix.map((cell: MatrixCell) => (
-              <Cell
-                key={`cell_Id${cell.id}`}
-                cell={cell}
-                incAmount={incrementsAmount}
-                highlightCells={onHighlightCells}
-                removeHighlightCells={removeHighlightsCells}
-                isHighLight={isClosestCells(cell.id)}
-                percent={calcPercent(cell)}
-              />
-            ))
+            flatMatrix.map((cell: MatrixCell) => {
+              const cellClass = [style.cell]
+              if (isClosestCells(cell.id)) cellClass.push(style.cellBackLight)
+              return (
+                <Cell
+                  key={`cell_Id${cell.id}`}
+                  cell={cell}
+                  incAmount={incrementsAmount}
+                  highlightCells={onHighlightCells}
+                  removeHighlightCells={removeHighlightsCells}
+                  isHighLight={cellClass.join(' ')}
+                  percent={calcPercent(cell)}
+                />
+              )
+            })
           }
         </div>
 
