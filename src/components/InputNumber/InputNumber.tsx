@@ -1,8 +1,10 @@
+import React from "react"
 import { MouseEventHandler } from "react"
 import { InitialParameters } from "../../models/matrix.models"
 import style from "./InputNumber.module.css"
 
 interface InputNumberProps {
+  name: string
   title: string
   value: number
   increment: MouseEventHandler<HTMLButtonElement>
@@ -11,13 +13,15 @@ interface InputNumberProps {
   onChangeValue: (value: string, title: string) => void
 }
 
-const InputNumber = ({ title, increment, decrement, matrixSize, onChangeValue }: InputNumberProps) => {
+const InputNumber = ({ name, title, increment, decrement, matrixSize, onChangeValue }: InputNumberProps) => {
   return (
     <div>
       <div className={style.inputName}>{title}</div>
       <div className={style.counterWrapp}>
         <button className={style.btnCounter} type="button" onClick={decrement}>-</button>
-        <input type="text"
+        <input
+          name={name}
+          type="text"
           className={style.count}
           value={matrixSize[title]}
           onChange={(e) => onChangeValue(e.target.value, title)}

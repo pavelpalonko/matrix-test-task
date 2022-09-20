@@ -33,3 +33,9 @@ export interface InitialParameters {
   N: number 
   X: number 
 }
+
+export interface InitialParamServer {
+  m: string
+  n: string 
+  x: string 
+}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import MatrixTableDisplayer from "../MatrixTableDisplayer/MatrixTableDisplayer"
 import { useMatrixCalculations } from "../../common/hooks/useMatrixCalculations"
 import { useMatrixVisualEffects } from "../../common/hooks/useMatrixVisualEffects"
@@ -8,10 +8,9 @@ import { InitialParameters, Matrix, MatrixCell, MatrixRow } from "../../models/m
 
 interface MatrixTableProps {
   matrixSize: InitialParameters
-  resizeMatrix: (newValue: number) => void
 }
 
-const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
+const MatrixTable = ({ matrixSize }: MatrixTableProps) => {
 
   const [matrix, setMatrix] = useState<Matrix>([])
   const [currentCell, setCurrentCell] = useState<MatrixCell>({amount: 0, id: 0, rowId: 0})
@@ -19,21 +18,14 @@ const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
   const { cellsAmount } = useMatrixVisualEffects(currentCell, matrix, matrixSize.X)
   const { createMatrix, matrixSum } = useMatrixCalculations(matrix)
 
-  const startBuildMatrix = () => {
-    uniqueId(true)
-    setMatrix(createMatrix(matrixSize.M, matrixSize.N))
-  }
-
   const addRow = () => {
     if (matrixSize.M < matrixSize.N) return
     setMatrix([...matrix, ...createMatrix(1, matrixSize.N, matrix[matrix.length - 1][0].rowId + 1)])
-    resizeMatrix(matrixSize.M + 1)
   }
 
   const deleteRow = (rowIndex: number) => {
     const clearArrMatrix = matrix.filter((_, index: number) => index !== rowIndex)
     setMatrix(clearArrMatrix)
-    resizeMatrix(matrixSize.M - 1)
   }
 
   const incrementsAmount = useCallback( (elementId: MatrixCell['id']) => {
@@ -57,9 +49,15 @@ const MatrixTable = ({ matrixSize, resizeMatrix }: MatrixTableProps) => {
 
   const removeHighlightCells = useCallback(() => setCurrentCell({amount: 0, id: 0, rowId: 0}), [setCurrentCell])
 
+  useEffect( () => {
+    uniqueId(true)
+    setMatrix(createMatrix(matrixSize.M, matrixSize.N))
+  },[createMatrix, matrixSize.M, matrixSize.N])
+
   return (
     <>
-      <MyButton inner={'START BUILD MATRIX'} onClickHandler={startBuildMatrix} />
+    <button onClick={() => (window.location.href = '/')} >✎</button>
+    <div>M:{matrixSize.M} N:{matrixSize.N} X:{matrixSize.X}</div>
       <MatrixTableDisplayer
         matrix={matrix}
         closestCells={cellsAmount}

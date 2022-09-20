@@ -22,7 +22,7 @@
   height: 20px;
 }
 
-.cellWrapp {
+.cellWrapper {
   display: grid;
   width: fit-content;
   height: fit-content;

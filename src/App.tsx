@@ -1,11 +1,20 @@
 import React from 'react';
+import InputForm from './components/FormInput/FormInput';
 import MainPage from './pages/MainPage';
+import { InitialParamServer } from './models/matrix.models'
 
-function App() {
+interface AppProps {
+  initState: InitialParamServer
+}
+
+function App({ initState }: AppProps) {
 
   return (
     <div>
-      <MainPage/>
+      {initState.m
+        ? <MainPage initialParam={initState} />
+        : <InputForm />
+      }
     </div>
   );
 }
