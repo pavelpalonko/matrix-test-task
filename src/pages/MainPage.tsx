@@ -1,9 +1,13 @@
 import React, { useMemo } from "react"
 import style from './MainPage.module.css'
-import { InitialParameters } from "../models/matrix.models"
+import { InitialParameters, InitialParamServer } from "../models/matrix.models"
 import MatrixTable from "../components/MatrixTable/MatrixTable"
 
-const MainPage = ({ initialParam }: any) => {
+interface MainPageProps {
+  initialParam: InitialParamServer
+}
+
+const MainPage = ({ initialParam }: MainPageProps) => {
 
   const matrixSize: InitialParameters = useMemo(() => {
     return {

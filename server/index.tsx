@@ -4,6 +4,8 @@ import fs from 'fs/promises'
 
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import { matchPath } from 'react-router-dom'
+import { StaticRouter } from 'react-router-dom/server';
 
 import App from '../src/App'
 
@@ -33,13 +35,16 @@ const globalState = (state: any) => `<script id="window">${state}</script>`
 
 async function renderIndex(req, res) {
   let initState
-  if (req.url === '/') {
-    initState = { m: '', n: '', x: '' }
-  } else {
-    const urlSearchParams = new URLSearchParams(req.url.substring(2));
-    initState = Object.fromEntries(urlSearchParams.entries());
-  }
-  const app = ReactDOMServer.renderToString(React.createElement(App, {initState} ))
+  const pathTest = matchPath({ path: '/matrix-:m-:n-:x' }, req.url)
+
+  initState = { m: '', n: '', x: '' }
+  if (pathTest) initState = pathTest.params
+  
+  const app = ReactDOMServer.renderToString(
+    <StaticRouter location={req.url}>
+      <App initState={initState} />
+    </StaticRouter>
+  )
   const indexFile = path.resolve('./build/index.html')
   try {
     const fileContent = await fs.readFile(indexFile, 'utf8')

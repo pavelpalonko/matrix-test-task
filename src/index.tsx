@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 import { InitialParamServer } from './models/matrix.models'
 
 declare global {
@@ -11,9 +12,14 @@ declare global {
 
 const initState = window.__INITIAL_STATE__
 
-const root = ReactDOM.hydrateRoot( document.getElementById('root')!, <App initState={initState}/>)
+const root = ReactDOM.hydrateRoot(document.getElementById('root')!,
+  <BrowserRouter>
+    <App initState={initState} />
+  </BrowserRouter>
+)
 
 root.render(
- <App initState={initState}/>
+  <BrowserRouter>
+    <App initState={initState} />
+  </BrowserRouter>
 );
-

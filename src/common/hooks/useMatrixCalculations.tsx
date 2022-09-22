@@ -7,7 +7,7 @@ export function useMatrixCalculations(matrix: Matrix) {
 
   const createMatrix = useCallback( (rowMatrix: number, colMatrix: number, id: number = 0) => {
     return Array.from({ length: rowMatrix }, (_, k) => (Array.from({ length: colMatrix },
-      () => ({ id: uniqueId(false), amount: randomInteger(100, 999), rowId: id > 0 ? id : k }))))
+      () => ({ id: uniqueId(), amount: randomInteger(100, 999), rowId: id > 0 ? id : k }))))
   }, [])
 
   const matrixSum = useMemo(() => {

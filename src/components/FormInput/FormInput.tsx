@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import style from './FormInput.module.css'
 import InputNumber from '../InputNumber/InputNumber'
+import { useNavigate } from 'react-router-dom'
 import { InitialParameters } from '../../models/matrix.models'
 
 const InputForm = () => {
 
   const [matrixSize, setMatrixSize] = useState<InitialParameters>({ M: 0, N: 0, X: 0 })
+  const navigate = useNavigate()
 
   const onChangeValue = (value: string, title: string) => {
     const newValue = value.replace(/[^0-9]/g, '')
@@ -27,8 +29,13 @@ const InputForm = () => {
     setMatrixSize({ ...matrixSize, [fieldName]: --matrixSize[fieldName] })
   }, [matrixSize])
 
+   const onSubmitHandler = () => {
+    navigate(`/matrix-${matrixSize.M}-${matrixSize.N}-${matrixSize.X}`)
+    window.location.reload()
+   }
+
   return (
-    <form className={style.controller}>
+    <form onSubmit={onSubmitHandler} className={style.controller}>
       <InputNumber
         name='m'
         title={'M'}

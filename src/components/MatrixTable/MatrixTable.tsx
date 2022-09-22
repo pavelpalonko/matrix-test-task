@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react"
 import MatrixTableDisplayer from "../MatrixTableDisplayer/MatrixTableDisplayer"
 import { useMatrixCalculations } from "../../common/hooks/useMatrixCalculations"
 import { useMatrixVisualEffects } from "../../common/hooks/useMatrixVisualEffects"
-import { uniqueId } from "../../common/utils/uniqueId"
 import MyButton from "../MyButton/MyButton"
 import { InitialParameters, Matrix, MatrixCell, MatrixRow } from "../../models/matrix.models"
 
@@ -50,7 +49,6 @@ const MatrixTable = ({ matrixSize }: MatrixTableProps) => {
   const removeHighlightCells = useCallback(() => setCurrentCell({amount: 0, id: 0, rowId: 0}), [setCurrentCell])
 
   useEffect( () => {
-    uniqueId(true)
     setMatrix(createMatrix(matrixSize.M, matrixSize.N))
   },[createMatrix, matrixSize.M, matrixSize.N])
 
