@@ -1,11 +1,21 @@
 import React from 'react';
+import InputForm from './components/FormInput/FormInput';
 import MainPage from './pages/MainPage';
+import { Routes, Route } from 'react-router-dom'
+import { InitialParamServer } from './models/matrix.models'
 
-function App() {
+interface AppProps {
+  initState: InitialParamServer
+}
+
+function App({ initState }: AppProps) {
 
   return (
     <div>
-      <MainPage/>
+      <Routes>
+        <Route path='/' element={<InputForm/>}/>
+        <Route path='/matrix-:m-:n-:x' element={<MainPage initialParam={initState}/>}/>
+      </Routes>
     </div>
   );
 }

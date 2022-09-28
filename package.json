@@ -7,21 +7,23 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.11.49",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.7.4",
-    "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "ssr:dev:build-server": "webpack --config server/webpack.server.js --mode=development -w",
+    "ssr:dev:start": "nodemon ./server-build/index.js",
+    "ssr:dev": "npm-run-all --parallel build ssr:dev:*"
   },
   "eslintConfig": {
     "extends": [
@@ -42,6 +44,10 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "^8.3.4"
+    "@types/node": "^18.7.18",
+    "nodemon": "^2.0.20",
+    "npm-run-all": "^4.1.5",
+    "webpack-cli": "^4.10.0",
+    "webpack-node-externals": "^3.0.0"
   }
 }

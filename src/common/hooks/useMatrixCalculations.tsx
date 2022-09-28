@@ -1,14 +1,14 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { Matrix, MatrixDerivedProperties } from "../../models/matrix.models"
 import { randomInteger } from "../utils/randomNumberGenerator"
 import { uniqueId } from "../utils/uniqueId"
 
 export function useMatrixCalculations(matrix: Matrix) {
 
-  const createMatrix = (rowMatrix: number, colMatrix: number, id: number = 0) => {
+  const createMatrix = useCallback( (rowMatrix: number, colMatrix: number, id: number = 0) => {
     return Array.from({ length: rowMatrix }, (_, k) => (Array.from({ length: colMatrix },
-      () => ({ id: uniqueId(false), amount: randomInteger(100, 999), rowId: id > 0 ? id : k }))))
-  }
+      () => ({ id: uniqueId(), amount: randomInteger(100, 999), rowId: id > 0 ? id : k }))))
+  }, [])
 
   const matrixSum = useMemo(() => {
     const matrixSum: MatrixDerivedProperties = { rowSumValues: [], columnAverageValues: [] }

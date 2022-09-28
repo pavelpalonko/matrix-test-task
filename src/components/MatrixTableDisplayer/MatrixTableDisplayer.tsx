@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 import style from './MatrixTableDisplayer.module.css'
 import { CellAverage, CurrentSumCell, Matrix, MatrixCell, MatrixRow, RowSum } from "../../models/matrix.models"
@@ -19,7 +20,7 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
   const flatMatrix = matrix.flat()
   const [currentSumCell, setCurrentSumCell] = useState<CurrentSumCell>({ sumId: -1, index: -1 })
 
-  const showPercente = (currentCell: CurrentSumCell) => {
+  const showPercent = (currentCell: CurrentSumCell) => {
     setCurrentSumCell(currentCell)
   }
 
@@ -46,7 +47,7 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
           }
         </div>
 
-        <div className={style.cellWrapp} style={{ gridTemplateColumns: `repeat(${columnAverage?.length}, 1fr)` }}>
+        <div className={style.cellWrapper} style={{ gridTemplateColumns: `repeat(${columnAverage?.length}, 1fr)` }}>
           {
             flatMatrix.map((cell: MatrixCell) => {
               const cellClass = [style.cell]
@@ -71,7 +72,7 @@ const MatrixTableDisplayer = ({ matrix, closestCells, removeHighlightsCells, del
             rowSum.map((sum, index) => (
               <div
                 key={`rowSum_id${sum.sumId}`}
-                onMouseOver={() => showPercente({ sumId: sum.sumId, index: index })}
+                onMouseOver={() => showPercent({ sumId: sum.sumId, index: index })}
                 onMouseOut={() => setCurrentSumCell({ sumId: -1, index: -1 })}
                 className={style.sum}>{sum.rowSum}</div>
             ))

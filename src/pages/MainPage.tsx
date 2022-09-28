@@ -1,70 +1,26 @@
-import React, { useCallback, useState } from "react"
+import React, { useMemo } from "react"
 import style from './MainPage.module.css'
-import { InitialParameters } from "../models/matrix.models"
+import { InitialParameters, InitialParamServer } from "../models/matrix.models"
 import MatrixTable from "../components/MatrixTable/MatrixTable"
-import InputNumber from "../components/InputNumber/InputNumber"
 
-const MainPage = () => {
+interface MainPageProps {
+  initialParam: InitialParamServer
+}
 
-  const [matrixSize, setMatrixSize] = useState<InitialParameters>({ M: 0, N: 0, X: 0 })
+const MainPage = ({ initialParam }: MainPageProps) => {
 
-  const onChangeValue = (value: string, title: string) => {
-    const newValue = value.replace(/[^0-9]/g, '')
-    if (+newValue > 100) return
-    setMatrixSize({ ...matrixSize, [title]: +newValue })
-  }
-
-  const resizeMatrix = useCallback( (newValue: number) => {
-    setMatrixSize({ ...matrixSize, M: newValue })
-  }, [matrixSize])
-
-  const incrementInitialParameters = useCallback((fieldName: string) => {
-    if (fieldName === 'X' && matrixSize.X === (matrixSize.M * matrixSize.N)) return
-    if (fieldName === 'M' && matrixSize[fieldName] >= 100) return
-    if (fieldName === 'N' && matrixSize[fieldName] >= 100) return
-
-    setMatrixSize({ ...matrixSize, [fieldName]: ++matrixSize[fieldName] })
-  }, [matrixSize])
-
-  const decrementInitialParameters = useCallback((fieldName: string) => {
-    if (matrixSize[fieldName] === 0) return
-
-    setMatrixSize({ ...matrixSize, [fieldName]: --matrixSize[fieldName] })
-  }, [matrixSize])
+  const matrixSize: InitialParameters = useMemo(() => {
+    return {
+      M: +initialParam.m,
+      N: +initialParam.n,
+      X: +initialParam.x
+    }
+  }, [initialParam])
 
   return (
     <div className={style.mainPage}>
-      <div className={style.controller}>
-        <InputNumber
-          title={'M'}
-          value={matrixSize.M}
-          increment={() => incrementInitialParameters('M')}
-          decrement={() => decrementInitialParameters('M')}
-          matrixSize={matrixSize}
-          onChangeValue={onChangeValue}
-        />
-
-        <InputNumber
-          title={'N'}
-          value={matrixSize.N}
-          increment={() => incrementInitialParameters('N')}
-          decrement={() => decrementInitialParameters('N')}
-          matrixSize={matrixSize}
-          onChangeValue={onChangeValue}
-        />
-
-        <InputNumber
-          title={'X'}
-          value={matrixSize.X}
-          increment={() => incrementInitialParameters('X')}
-          decrement={() => decrementInitialParameters('X')}
-          matrixSize={matrixSize}
-          onChangeValue={onChangeValue}
-        />
-
-      </div>
       <div className={style.matrixWrapp}>
-        <MatrixTable matrixSize={matrixSize} resizeMatrix={resizeMatrix} />
+        <MatrixTable matrixSize={matrixSize} />
       </div>
     </div>
   )
